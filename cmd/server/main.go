@@ -2,9 +2,11 @@ package main
 
 import (
 	"context"
-	"log"
 
+	"cdr.dev/slog"
 	"github.com/chromedp/chromedp"
+
+	"github.com/ib-gambler/ib-cp-server/pkg"
 )
 
 func main() {
@@ -18,8 +20,7 @@ func main() {
 	allocCtx, cancel := chromedp.NewExecAllocator(context.Background(), opts...)
 	defer cancel()
 
-	// also set up a custom logger
-	taskCtx, cancel := chromedp.NewContext(allocCtx, chromedp.WithLogf(log.Printf))
+	taskCtx, cancel := chromedp.NewContext(allocCtx)
 	defer cancel()
 
 	err := chromedp.Run(
@@ -27,6 +28,6 @@ func main() {
 		chromedp.Navigate("https://localhost:5000"),
 	)
 	if err != nil {
-		log.Fatal(err)
+		pkg.Logger.Fatal(context.Background(), "chromedp.Run", slog.Error(err))
 	}
 }
