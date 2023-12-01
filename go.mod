@@ -6,6 +6,7 @@ require (
 	cdr.dev/slog v1.6.1
 	github.com/caarlos0/env/v10 v10.0.0
 	github.com/chromedp/chromedp v0.9.3
+	github.com/go-chi/chi/v5 v5.0.10
 )
 
 require (
