@@ -9,9 +9,10 @@ import (
 )
 
 var conf = &struct {
-	Account struct {
-		Username string `env:"ACCOUNT_USERNAME"`
-		Password string `env:"ACCOUNT_PASSWORD"`
+	IB struct {
+		Url      string `env:"IB_URL" envDefault:"https://localhost:5000"`
+		Username string `env:"IB_USERNAME"`
+		Password string `env:"IB_PASSWORD"`
 	}
 	Server struct {
 		Host     string        `env:"SERVER_HOST" envDefault:"0.0.0.0"`

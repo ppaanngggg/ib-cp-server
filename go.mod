@@ -7,9 +7,11 @@ require (
 	github.com/caarlos0/env/v10 v10.0.0
 	github.com/chromedp/chromedp v0.9.3
 	github.com/go-chi/chi/v5 v5.0.10
+	github.com/go-chi/render v1.0.3
 )
 
 require (
+	github.com/ajg/form v1.5.1 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/charmbracelet/lipgloss v0.7.1 // indirect
 	github.com/chromedp/cdproto v0.0.0-20231114014204-3e458d5176f9 // indirect
