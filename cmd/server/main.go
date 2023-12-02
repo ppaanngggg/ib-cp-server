@@ -3,14 +3,17 @@ package main
 import (
 	"context"
 	"crypto/tls"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"os"
 	"os/exec"
+	"time"
 
 	"cdr.dev/slog"
 	"cdr.dev/slog/sloggers/sloghuman"
+	"github.com/caarlos0/env/v10"
 	"github.com/chromedp/chromedp"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -18,6 +21,21 @@ import (
 )
 
 var (
+	conf = &struct {
+		IB struct {
+			Embedded bool   `env:"IB_EMBEDDED" envDefault:"true"`
+			ExecDir  string `env:"IB_EXEC_DIR" envDefault:"clientportal.gw"`
+			Url      string `env:"IB_URL" envDefault:"https://localhost:5000"`
+			Username string `env:"IB_USERNAME"`
+			Password string `env:"IB_PASSWORD"`
+		}
+		Server struct {
+			Host     string        `env:"SERVER_HOST" envDefault:"0.0.0.0"`
+			Port     string        `env:"SERVER_PORT" envDefault:"8000"`
+			Timeout  time.Duration `env:"SERVER_TIMEOUT" envDefault:"60s"`
+			Throttle int           `env:"SERVER_THROTTLE" envDefault:"100"`
+		}
+	}{}
 	logger = slog.Make(sloghuman.Sink(os.Stdout))
 	router = chi.NewRouter()
 )
@@ -42,8 +60,19 @@ func renderErr(
 }
 
 func init() {
+	// parse config
+	if err := env.Parse(conf); err != nil {
+		logger.Fatal(context.Background(), "failed to parse config", err)
+	}
+	// log the config as pretty-printed JSON
+	tmp, err := json.MarshalIndent(conf, "", "  ")
+	if err != nil {
+		logger.Fatal(context.Background(), "failed to marshal config", err)
+	}
+	logger.Info(context.Background(), "", "config", string(tmp))
+
+	// start IB Gateway if embedded
 	if conf.IB.Embedded {
-		// create background program
 		cmd := exec.Command(
 			"bin/run.sh", "root/conf.yaml",
 		)
@@ -69,6 +98,7 @@ func init() {
 	router.Use(middleware.Logger)
 	router.Use(middleware.Recoverer)
 
+	// custom login api by chromedp open website and trigger login
 	router.Post(
 		"/v1/api/login", func(writer http.ResponseWriter, request *http.Request) {
 			// chromedp exec options
@@ -120,8 +150,10 @@ func init() {
 			writer.WriteHeader(http.StatusOK)
 		},
 	)
+	// resend all other requests to IB Gateway
 	router.HandleFunc(
 		"/*", func(writer http.ResponseWriter, request *http.Request) {
+			// create new request with context
 			ctx := request.Context()
 			req, err := http.NewRequestWithContext(
 				ctx, request.Method, conf.IB.Url+request.URL.Path, request.Body,
@@ -130,7 +162,7 @@ func init() {
 				renderErr(ctx, writer, request, "http.NewRequestWithContext error", err)
 				return
 			}
-			// resend all other requests to IB
+			// send request
 			client := &http.Client{
 				Transport: &http.Transport{
 					TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
@@ -142,6 +174,7 @@ func init() {
 				return
 			}
 			defer resp.Body.Close()
+			// copy response
 			if resp.StatusCode == http.StatusOK {
 				writer.Header().Set("Content-Type", resp.Header.Get("Content-Type"))
 				raw, err := io.ReadAll(resp.Body)
