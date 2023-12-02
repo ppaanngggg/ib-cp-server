@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"os/exec"
 
 	"cdr.dev/slog"
 	"cdr.dev/slog/sloggers/sloghuman"
@@ -41,15 +42,23 @@ func renderErr(
 }
 
 func init() {
-	// create background program
-	// cmd := exec.Command(
-	// 	"./clientportal.gw/bin/run.sh", "./clientportal.gw/root/conf.yaml",
-	// )
-	// cmd.Stdout = os.Stdout
-	// cmd.Stderr = os.Stderr
-	// if err := cmd.Start(); err != nil {
-	// 	logger.Fatal(context.Background(), "cmd.Start", slog.Error(err))
-	// }
+	if conf.IB.Embedded {
+		// create background program
+		cmd := exec.Command(
+			"bin/run.sh", "root/conf.yaml",
+		)
+		cmd.Dir = conf.IB.ExecDir
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		if err := cmd.Start(); err != nil {
+			logger.Fatal(context.Background(), "cmd.Start", slog.Error(err))
+		}
+		go func() {
+			if err := cmd.Wait(); err != nil {
+				logger.Fatal(context.Background(), "cmd.Wait", slog.Error(err))
+			}
+		}()
+	}
 
 	// setup router
 	router.Use(middleware.Timeout(conf.Server.Timeout))

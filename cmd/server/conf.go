@@ -10,6 +10,8 @@ import (
 
 var conf = &struct {
 	IB struct {
+		Embedded bool   `env:"IB_EMBEDDED" envDefault:"true"`
+		ExecDir  string `env:"IB_EXEC_DIR" envDefault:"clientportal.gw"`
 		Url      string `env:"IB_URL" envDefault:"https://localhost:5000"`
 		Username string `env:"IB_USERNAME"`
 		Password string `env:"IB_PASSWORD"`
