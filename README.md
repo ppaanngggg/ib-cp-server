@@ -19,8 +19,23 @@ Ref: [Official API Endpoints](https://interactivebrokers.github.io/cpwebapi/endp
 
 ### From source
 
-TODO
+1. Install [Go](https://go.dev/doc/install)
+2. Download [clientportal.gw.zip](https://download2.interactivebrokers.com/portal/clientportal.gw.zip) or you can use the one in this repo. I will update it periodically. Unzip it to `clientportal.gw` folder or somewhere else.
+3. Run `go run ./cmd/server` or `go build ./cmd/server` and run `./server`
 
 ### Docker
 
-TODO
+1. You can simple pull image by `docker pull ppaanngggg/ib-cp-server:v0.1.0`
+2. Or you can build it by `docker build -t ib-cp-server .`
+3. Run it by `docker run -d --name=ib-cp-server -p 8000:8000 -e IB_USERNAME=your_username -e IB_PASSWORD=your_password ppaanngggg/ib-cp-server:v0.1.0`
+
+## Environment Variables
+
+1. `IB_USERNAME`: Your IB Account username
+2. `IB_PASSWORD`: Your IB Account password
+3. `IB_EMBEDDED`: If you want main program help you to start the official server, set it to `true`. Default is `ture`
+4. `IB_EXEC_DIR`: if `IB_EMBEDDED` is `true`, you can set this to the folder of `clientportal.gw` folder. Default is `./clientportal.gw`
+5. `IB_URL`: If you start the official server by yourself, you can set this to the url of the official server. Default is `https://localhost:5000`
+6. `SERVER_HOST`: The host of this server. Default is `0.0.0.0`
+7. `SERVER_PORT`: The port of this server. Default is `8000`
+8. `SERVER_TIMEOUT`: Request timeout. Default is `60s`
