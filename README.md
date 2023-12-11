@@ -39,3 +39,7 @@ Ref: [Official API Endpoints](https://interactivebrokers.github.io/cpwebapi/endp
 6. `SERVER_HOST`: The host of this server. Default is `0.0.0.0`
 7. `SERVER_PORT`: The port of this server. Default is `8000`
 8. `SERVER_TIMEOUT`: Request timeout. Default is `60s`
+
+## Thanks
+
+<a href="https://www.buymeacoffee.com/ppaanngggg" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 37px !important;width: 170px !important;" ></a>
