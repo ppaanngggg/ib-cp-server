@@ -25,9 +25,9 @@ Ref: [Official API Endpoints](https://interactivebrokers.github.io/cpwebapi/endp
 
 ### Docker
 
-1. You can simple pull image by `docker pull ppaanngggg/ib-cp-server:v0.1.0`
+1. You can simple pull image by `docker pull ppaanngggg/ib-cp-server`
 2. Or you can build it by `docker build -t ib-cp-server .`
-3. Run it by `docker run -d --name=ib-cp-server -p 8000:8000 -e IB_USERNAME=your_username -e IB_PASSWORD=your_password ppaanngggg/ib-cp-server:v0.1.0`
+3. Run it by `docker run -d --name=ib-cp-server -p 8000:8000 -e IB_USERNAME=your_username -e IB_PASSWORD=your_password ppaanngggg/ib-cp-server`
 
 ## Environment Variables
 
