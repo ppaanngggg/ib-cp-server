@@ -17,7 +17,9 @@ WORKDIR /clientportal.gw
 COPY clientportal.gw.zip ./
 RUN unzip clientportal.gw.zip
 
-FROM amazoncorretto:21 AS runner
+FROM chromedp/headless-shell:116.0.5845.14 AS runner
+
+RUN apt update && apt install -y openjdk-17-jre-headless
 
 WORKDIR /app
 
