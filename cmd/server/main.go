@@ -106,6 +106,7 @@ func init() {
 				chromedp.DefaultExecAllocatorOptions[:],
 				chromedp.DisableGPU,       // disable GPU
 				chromedp.IgnoreCertErrors, // ignore certificate errors
+				// chromedp.Flag("headless", false), // show browser to debug
 			)
 			ctx, cancel := chromedp.NewExecAllocator(request.Context(), opts...)
 			defer cancel()
@@ -156,7 +157,7 @@ func init() {
 			// create new request with context
 			ctx := request.Context()
 			req, err := http.NewRequestWithContext(
-				ctx, request.Method, conf.IB.Url+request.URL.Path, request.Body,
+				ctx, request.Method, conf.IB.Url+request.RequestURI, request.Body,
 			)
 			if err != nil {
 				renderErr(ctx, writer, request, "http.NewRequestWithContext error", err)
@@ -175,25 +176,22 @@ func init() {
 			}
 			defer resp.Body.Close()
 			// copy response
-			if resp.StatusCode == http.StatusOK {
-				writer.Header().Set("Content-Type", resp.Header.Get("Content-Type"))
-				raw, err := io.ReadAll(resp.Body)
-				if err != nil {
-					renderErr(ctx, writer, request, "io.ReadAll error", err)
-					return
-				}
-				if _, err = writer.Write(raw); err != nil {
-					renderErr(ctx, writer, request, "writer.Write error", err)
-					return
-				}
+			writer.Header().Set("Content-Type", resp.Header.Get("Content-Type"))
+			raw, err := io.ReadAll(resp.Body)
+			if err != nil {
+				renderErr(ctx, writer, request, "io.ReadAll error", err)
+				return
 			}
 			writer.WriteHeader(resp.StatusCode)
+			if _, err = writer.Write(raw); err != nil {
+				renderErr(ctx, writer, request, "writer.Write error", err)
+				return
+			}
 		},
 	)
 }
 
 func main() {
-
 	// start server
 	logger.Info(
 		context.Background(),

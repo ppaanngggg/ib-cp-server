@@ -5,7 +5,7 @@ go 1.21.3
 require (
 	cdr.dev/slog v1.6.1
 	github.com/caarlos0/env/v10 v10.0.0
-	github.com/chromedp/chromedp v0.9.3
+	github.com/chromedp/chromedp v0.9.5
 	github.com/go-chi/chi/v5 v5.0.10
 	github.com/go-chi/render v1.0.3
 )
@@ -14,11 +14,11 @@ require (
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/charmbracelet/lipgloss v0.7.1 // indirect
-	github.com/chromedp/cdproto v0.0.0-20231114014204-3e458d5176f9 // indirect
+	github.com/chromedp/cdproto v0.0.0-20240214232516-ad4608604e9e // indirect
 	github.com/chromedp/sysutil v1.0.0 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
 	github.com/gobwas/pool v0.2.1 // indirect
-	github.com/gobwas/ws v1.3.1 // indirect
+	github.com/gobwas/ws v1.3.2 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
@@ -30,7 +30,7 @@ require (
 	go.opentelemetry.io/otel v1.16.0 // indirect
 	go.opentelemetry.io/otel/trace v1.16.0 // indirect
 	golang.org/x/crypto v0.11.0 // indirect
-	golang.org/x/sys v0.14.0 // indirect
+	golang.org/x/sys v0.17.0 // indirect
 	golang.org/x/term v0.10.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 )
